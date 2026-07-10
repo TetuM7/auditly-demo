@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Auditly — an audit-prep platform. Every figure reconciled to its source before it counts. Verified, not guessed.">
+<meta property="og:title" content="Auditly — audit-prep platform">
+<meta property="og:description" content="Audit evidence that arrives already tied out. Verified, not guessed.">
+</head>
+<body>
+<title>Auditly — audit-prep platform</title>
+<style>
+  :root {
+    --bg: #f4f6f5;
+    --panel: #ffffff;
+    --ink: #16201d;
+    --muted: #5e6b66;
+    --faint: #8b968f;
+    --line: #dde3e0;
+    --line-strong: #cbd4cf;
+    --accent: #0c6b57;
+    --accent-ink: #0a5747;
+    --accent-soft: #e6f0ec;
+    --flag: #b23a2e;
+    --good: #0c6b57;
+    --warn: #a8712a;
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+    --maxw: 1080px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1512; --panel: #131c18; --ink: #e8eeeb; --muted: #94a19b;
+      --faint: #6c7a74; --line: #24302b; --line-strong: #30403a;
+      --accent: #43c3a1; --accent-ink: #6fd4b8; --accent-soft: #12251f;
+      --flag: #e08373; --good: #43c3a1; --warn: #d6a15e;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f6f5; --panel: #ffffff; --ink: #16201d; --muted: #5e6b66;
+    --faint: #8b968f; --line: #dde3e0; --line-strong: #cbd4cf;
+    --accent: #0c6b57; --accent-ink: #0a5747; --accent-soft: #e6f0ec;
+    --flag: #b23a2e; --good: #0c6b57; --warn: #a8712a;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1512; --panel: #131c18; --ink: #e8eeeb; --muted: #94a19b;
+    --faint: #6c7a74; --line: #24302b; --line-strong: #30403a;
+    --accent: #43c3a1; --accent-ink: #6fd4b8; --accent-soft: #12251f;
+    --flag: #e08373; --good: #43c3a1; --warn: #d6a15e;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern" 1;
+  }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+  /* Ledger rule down the left of the content column */
+  .ledger { position: relative; }
+  @media (min-width: 900px) {
+    .ledger::before {
+      content: ""; position: absolute; top: 0; bottom: 0; left: calc((100vw - var(--maxw)) / 2 + 28px);
+      width: 1px; background: var(--line); opacity: .8;
+    }
+  }
+
+  a { color: var(--accent-ink); text-decoration: none; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow .ref {
+    color: var(--accent); border: 1px solid var(--line-strong); border-radius: 3px;
+    padding: 1px 6px; font-size: 10.5px;
+  }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; text-wrap: balance; margin: 0; }
+
+  /* ---- top bar ---- */
+  header.bar {
+    border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5;
+    background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(8px);
+  }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand b { font-family: var(--serif); font-size: 20px; letter-spacing: -.01em; }
+  .brand .tag { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: .04em; }
+  .bar nav { display: flex; gap: 22px; font-size: 13.5px; color: var(--muted); }
+  .bar nav a:hover { color: var(--ink); }
+  @media (max-width: 720px) { .bar nav { display: none; } }
+
+  /* ---- hero ---- */
+  .hero { padding: 78px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .hero h1 { font-size: clamp(34px, 5vw, 54px); line-height: 1.04; letter-spacing: -.015em; margin: 20px 0 0; }
+  .hero h1 .em { color: var(--accent); font-style: italic; }
+  .lede { color: var(--muted); font-size: 17px; max-width: 33em; margin: 22px 0 0; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; align-items: center; }
+  .btn {
+    font-family: var(--sans); font-size: 14px; font-weight: 550; cursor: pointer;
+    padding: 11px 18px; border-radius: 7px; border: 1px solid transparent; display: inline-flex; gap: 8px; align-items: center;
+    transition: transform .12s ease, background .18s ease, border-color .18s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  :root[data-theme="dark"] .btn-primary, @media (prefers-color-scheme: dark) { }
+  .btn-primary:hover { background: var(--accent-ink); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .btn .arrow { transition: transform .15s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+  .note { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin-top: 14px; letter-spacing: .01em; }
+  .note b { color: var(--muted); font-weight: 600; }
+
+  /* ---- workpaper reconciliation card ---- */
+  .wp {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 1px 0 var(--line), 0 18px 40px -28px rgba(10,40,32,.45);
+    overflow: hidden;
+  }
+  .wp-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--faint); text-transform: uppercase;
+  }
+  .wp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; margin-right: 7px; vertical-align: middle; }
+  .wp-body { padding: 8px 16px 6px; }
+  .row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--mono); font-size: 13.5px; padding: 7px 0; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .row .lbl { color: var(--muted); letter-spacing: .01em; }
+  .row .num { font-variant-numeric: tabular-nums; }
+  .rule { height: 1px; background: var(--line-strong); margin: 4px 0; }
+  .rule.dbl { height: 3px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); background: transparent; }
+  .tied {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin: 6px -16px -6px; padding: 12px 16px; background: var(--accent-soft);
+    border-top: 1px solid var(--line);
+  }
+  .tied .mark { display: flex; align-items: center; gap: 9px; color: var(--accent-ink); font-weight: 600; font-family: var(--sans); font-size: 13.5px; }
+  .tick {
+    width: 20px; height: 20px; flex: none;
+  }
+  .tick path { stroke: var(--accent); stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 26; stroke-dashoffset: 26; }
+  .tick.on path { stroke-dashoffset: 0; transition: stroke-dashoffset .5s ease .1s; }
+  .var { font-family: var(--mono); font-size: 13px; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+
+  /* ---- section frame ---- */
+  section { padding: 62px 0; border-top: 1px solid var(--line); }
+  .sec-head { display: flex; flex-direction: column; gap: 14px; max-width: 40em; }
+  .sec-head h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.1; letter-spacing: -.01em; }
+  .sec-head p { color: var(--muted); font-size: 16px; margin: 0; }
+
+  /* problem two-column */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 34px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 26px; } }
+  .col h3 { font-size: 18px; margin-bottom: 8px; }
+  .col p { color: var(--muted); margin: 0; font-size: 15px; }
+  .col .k { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--flag); }
+  .col.good .k { color: var(--accent); }
+
+  /* capability cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 36px; }
+  @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 22px 22px 20px;
+    display: flex; flex-direction: column; gap: 10px; transition: border-color .2s ease, transform .2s ease;
+  }
+  .card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: center; gap: 11px; }
+  .card .idx { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: .08em; }
+  .card h3 { font-size: 19px; letter-spacing: -.005em; }
+  .card p { color: var(--muted); font-size: 14.5px; margin: 0; }
+  .card .stat { font-family: var(--mono); font-size: 12px; color: var(--accent-ink); background: var(--accent-soft);
+    border-radius: 5px; padding: 4px 9px; align-self: flex-start; margin-top: 2px; letter-spacing: .01em; }
+  .tickmark { color: var(--accent); flex: none; }
+
+  /* architecture */
+  .arch { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 40px; margin-top: 30px;
+    border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel); }
+  @media (max-width: 640px) { .arch { grid-template-columns: 1fr; } }
+  .layer { display: flex; justify-content: space-between; gap: 16px; align-items: baseline;
+    padding: 13px 20px; border-bottom: 1px solid var(--line); }
+  .layer .l { font-size: 14px; color: var(--muted); }
+  .layer .v { font-family: var(--mono); font-size: 12.5px; color: var(--ink); text-align: right; }
+  @media (min-width: 641px) { .layer:nth-last-child(-n+2):nth-child(odd) { border-bottom: none; }
+    .layer:last-child { border-bottom: none; } }
+
+  /* explore — two doors */
+  .doors { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 34px; }
+  @media (max-width: 760px) { .doors { grid-template-columns: 1fr; } }
+  .door { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 24px 24px 22px;
+    display: flex; flex-direction: column; gap: 12px; transition: border-color .2s ease, transform .2s ease; }
+  .door:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+  .door .role { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .door h3 { font-size: 22px; letter-spacing: -.01em; margin-top: -4px; }
+  .tools { display: flex; flex-direction: column; gap: 9px; margin: 6px 0 4px; }
+  .tool { display: flex; gap: 11px; align-items: flex-start; font-size: 14px; color: var(--muted); line-height: 1.5; }
+  .tool b { color: var(--ink); font-weight: 600; }
+  .tool .tk { width: 16px; height: 16px; flex: none; margin-top: 3px; fill: none; stroke: var(--accent);
+    stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .door .btn { align-self: flex-start; margin-top: 4px; }
+  .door .note { margin-top: 2px; }
+  .explore-foot { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 22px; }
+
+  footer { border-top: 1px solid var(--line); padding: 34px 0 60px; color: var(--faint); font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+  footer .mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: .03em; }
+
+  .fade { opacity: 0; transform: translateY(10px); animation: fu .7s cubic-bezier(.2,.7,.2,1) forwards; }
+  .fade.d1 { animation-delay: .05s; } .fade.d2 { animation-delay: .13s; } .fade.d3 { animation-delay: .22s; }
+  @keyframes fu { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade { animation: none; opacity: 1; transform: none; } .tick path { stroke-dashoffset: 0; } }
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><b>Auditly</b><span class="tag">audit-prep platform</span></div>
+    <nav>
+      <a href="#problem">Problem</a>
+      <a href="#what">What it does</a>
+      <a href="#arch">Architecture</a>
+      <a href="#explore">Explore</a>
+    </nav>
+  </div>
+</header>
+
+<div class="ledger">
+<div class="wrap">
+
+  <section class="hero" style="border-top:none">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow fade"><span class="ref">REF · 00</span> Portfolio project · full-stack + applied AI</div>
+        <h1 class="fade d1">Audit evidence that arrives <span class="em">already tied&nbsp;out.</span></h1>
+        <p class="lede fade d2">Auditly reads a financial document and <b>checks its own work</b> — every figure reconciled to its source before it counts. <b>Verified, not guessed.</b> The AI reads the evidence and flags what's missing; it never invents a number, and every value stays traceable to the page it came from.</p>
+        <div class="cta-row fade d3">
+          <a class="btn btn-primary" href="#explore">Watch the demo <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="https://auditly.147.135.113.6.sslip.io" target="_blank" rel="noopener">Try it live <span class="arrow">→</span></a>
+        </div>
+        <div class="note fade d3">Live demo · <b>alice@acme.com</b> / <b>password123</b> · deterministic extraction runs free, LLM path is Haiku with a hard spend cap.</div>
+      </div>
+
+      <div class="wp fade d2" aria-label="Bank statement reconciliation, tied out to zero variance">
+        <div class="wp-head"><span><span class="wp-dot"></span>WELLS FARGO · OPERATING</span><span>EXTRACTED</span></div>
+        <div class="wp-body">
+          <div class="row"><span class="lbl">Beginning balance</span><span class="num">124,350.00</span></div>
+          <div class="row"><span class="lbl">+ Deposits (5)</span><span class="num">84,092.18</span></div>
+          <div class="row"><span class="lbl">− Withdrawals (6)</span><span class="num">77,235.75</span></div>
+          <div class="rule dbl"></div>
+          <div class="row"><span class="lbl">Ending balance <span style="color:var(--faint)">· computed</span></span><span class="num">131,206.43</span></div>
+          <div class="row"><span class="lbl">Statement says</span><span class="num">131,206.43</span></div>
+          <div class="tied">
+            <span class="mark">
+              <svg class="tick" id="tick" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg>
+              Tied out
+            </span>
+            <span class="var">variance&nbsp; <b id="vari">0.00</b></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · A</span> The problem</div>
+      <h2>Audit fieldwork starts with weeks of chasing paper.</h2>
+      <p>The painful part of an audit isn't judgment — it's collecting, classifying, and tying out the client's evidence before any real work can begin. Auditly moves that work to the front, and automates the parts a machine should own.</p>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <div class="k">Today</div>
+        <h3>Manual, back-and-forth, error-prone</h3>
+        <p>PBC request lists over email. Statements re-keyed by hand. Tie-outs done in spreadsheets. The client shows up disorganized; the auditor spends the first weeks on logistics, not assurance.</p>
+      </div>
+      <div class="col good">
+        <div class="k">With Auditly</div>
+        <h3>Organized and half–tied-out on arrival</h3>
+        <p>The client self-serves onboarding, evidence is extracted and reconciled on upload, and a readiness check tells them what's missing <em>before</em> fieldwork. The auditor opens a file that's already substantiated.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="what">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · B</span> What it does</div>
+      <h2>Four things worth building carefully.</h2>
+      <p>Extraction is table stakes by now. The defensible parts are how the numbers get <em>verified</em>, how the AI stays honest, and how every artifact becomes durable evidence.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-1</span></div>
+        <h3>Deterministic-first extraction</h3>
+        <p>Bank-statement specialists pull structured fields and <b>reconcile them (tie-outs) before trusting them</b> — most documents need no LLM at all. When one does, the call is metered and hard-capped, with a free local model as automatic fallback so the demo never breaks or overspends.</p>
+        <span class="stat">$0 on the deterministic path</span>
+      </div>
+      <div class="card">
+        <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-2</span></div>
+        <h3>Grounded copilot, no-leak by construction</h3>
+        <p>One reusable spine powers copilots on four surfaces. The model only ever sees an <b>allow-listed grounding bundle</b> and defers to the deterministic engine — it can't invent figures or leak the auditor's internals.</p>
+        <span class="stat">24 / 24 safety-eval pass</span>
+      </div>
+      <div class="card">
+        <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-3</span></div>
+        <h3>Evidence substrate + ports</h3>
+        <p>Every capture — extraction, verification, correction, metric — emits to an append-only log and to corpus + time-series "taps," each tagged with method, model, and consent. The audit trail is the product, not an afterthought.</p>
+        <span class="stat">append-only · tamper-evident</span>
+      </div>
+      <div class="card">
+        <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-4</span></div>
+        <h3>Two-sided and multi-tenant</h3>
+        <p>The same platform serves the audit firm and the client from distinct, role-aware workspaces. Isolation is enforced at the database with Postgres row-level security — a cross-tenant read returns <b>404, not 403</b>.</p>
+        <span class="stat">RLS on every tenant table</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="arch">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · C</span> Architecture</div>
+      <h2>A layered monorepo: evidence substrate → product surfaces.</h2>
+      <p>Turborepo, typed end-to-end. Deterministic engine and grounded AI sit on a shared substrate that both the auditor and auditee surfaces read through.</p>
+    </div>
+    <div class="arch">
+      <div class="layer"><span class="l">Frontend</span><span class="v">Next.js 16 · React 19</span></div>
+      <div class="layer"><span class="l">API</span><span class="v">Express · JWT · Postgres RLS</span></div>
+      <div class="layer"><span class="l">Async / pipeline</span><span class="v">Workers · Temporal · Redis</span></div>
+      <div class="layer"><span class="l">Data</span><span class="v">Postgres · Drizzle · pgvector</span></div>
+      <div class="layer"><span class="l">Object storage</span><span class="v">MinIO (S3)</span></div>
+      <div class="layer"><span class="l">Authorization</span><span class="v">SpiceDB</span></div>
+      <div class="layer"><span class="l">Document text</span><span class="v">docling (layout-aware)</span></div>
+      <div class="layer"><span class="l">LLM</span><span class="v">Anthropic Haiku · capped</span></div>
+    </div>
+  </section>
+
+  <section id="explore">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · D</span> Explore both sides</div>
+      <h2>One platform, two experiences.</h2>
+      <p>The client prepares; the firm reviews. Step into either role — the demo is seeded, so you're clicking real engagements and real data, not screenshots.</p>
+    </div>
+    <div class="doors">
+      <div class="door">
+        <div class="role">Auditee — the client</div>
+        <h3>Show up audit-ready</h3>
+        <div class="tools">
+          <div class="tool"><svg class="tk" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Engagements</b> — answer the firm's requests in one place.</span></div>
+          <div class="tool"><svg class="tk" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Extraction engine</b> — drop in a statement, watch the figures reconcile.</span></div>
+          <div class="tool"><svg class="tk" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Audit readiness</b> — a verdict on what's missing, before fieldwork.</span></div>
+        </div>
+        <a class="btn btn-primary" href="https://auditly.147.135.113.6.sslip.io" target="_blank" rel="noopener">Enter as the client <span class="arrow">→</span></a>
+        <div class="note"><b>alice@acme.com</b> / password123</div>
+      </div>
+      <div class="door">
+        <div class="role">Auditor — the firm</div>
+        <h3>Run the engagement</h3>
+        <div class="tools">
+          <div class="tool"><svg class="tk" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg><span><b>PBC authoring</b> — build the request list from a template and send it.</span></div>
+          <div class="tool"><svg class="tk" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Review</b> — accept or send back each item as evidence arrives.</span></div>
+          <div class="tool"><svg class="tk" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Engagement workspace</b> — one file per client, per year.</span></div>
+        </div>
+        <a class="btn btn-primary" href="https://auditly.147.135.113.6.sslip.io" target="_blank" rel="noopener">Enter as the firm <span class="arrow">→</span></a>
+        <div class="note"><b>auditor@sterlingvance.com</b> / password123</div>
+      </div>
+    </div>
+    <div class="explore-foot">
+      <a class="btn btn-ghost" href="#" aria-label="Demo walkthrough video">Watch the 3-min walkthrough <span class="arrow">→</span></a>
+      <span class="note" style="margin:0">Deterministic extraction runs free · LLM path is Haiku, hard-capped · source available to reviewers on request.</span>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Auditly — a portfolio project in audit-prep + applied AI.</span>
+    <span class="mono">deterministic-first · grounded AI · append-only evidence</span>
+  </div>
+</footer>
+
+<script>
+  // One deliberate on-load moment: the tie-out settling to zero variance.
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var tick = document.getElementById("tick");
+    var vari = document.getElementById("vari");
+    if (reduce) { if (tick) tick.classList.add("on"); return; }
+    var start = null, dur = 700, from = 3182.68;
+    function step(ts) {
+      if (!start) start = ts;
+      var t = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - t, 3);
+      var val = from * (1 - eased);
+      if (vari) vari.textContent = val.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (t < 1) requestAnimationFrame(step);
+      else { if (vari) vari.textContent = "0.00"; if (tick) tick.classList.add("on"); }
+    }
+    setTimeout(function () { requestAnimationFrame(step); }, 450);
+  })();
+</script>
+</body>
+</html>

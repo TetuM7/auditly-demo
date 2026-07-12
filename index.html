@@ -222,6 +222,52 @@
   .fade.d1 { animation-delay: .05s; } .fade.d2 { animation-delay: .13s; } .fade.d3 { animation-delay: .22s; }
   @keyframes fu { to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { .fade { animation: none; opacity: 1; transform: none; } .tick path { stroke-dashoffset: 0; } }
+
+  /* ---- extraction engine ---- */
+  .engine-grid { display: grid; grid-template-columns: .92fr 1.08fr; gap: 40px; margin-top: 34px; align-items: start; }
+  @media (max-width: 860px) { .engine-grid { grid-template-columns: 1fr; gap: 30px; } }
+
+  .pipeline { display: flex; flex-direction: column; }
+  .stage { display: grid; grid-template-columns: 26px 1fr; gap: 15px; padding: 0 0 22px; position: relative; }
+  .stage:last-child { padding-bottom: 0; }
+  .stage .node { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line-strong);
+    background: var(--panel); display: grid; place-items: center; font-family: var(--mono); font-size: 12px;
+    color: var(--accent-ink); z-index: 1; }
+  .stage.llm .node { border-style: dashed; color: var(--warn); }
+  .stage::before { content: ""; position: absolute; left: 13px; top: 24px; bottom: 4px; width: 1px; background: var(--line); }
+  .stage:last-child::before { display: none; }
+  .s-name { font-size: 15px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .s-det { color: var(--muted); font-size: 13.5px; margin-top: 3px; line-height: 1.5; }
+  .tagchip { font-family: var(--mono); font-size: 9.5px; letter-spacing: .07em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-ink); font-weight: 400; }
+  .tagchip.gate { background: transparent; border: 1px solid var(--accent); }
+  .tagchip.brk { background: transparent; border: 1px dashed var(--warn); color: var(--warn); }
+
+  /* reveal recreation (a real CAPONE-057 extraction) */
+  .reveal .wp-head .st { color: var(--good); font-family: var(--mono); }
+  .rv-sec { padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .rv-k { font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--faint); display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
+  .class-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pill { background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; font-size: 13px; padding: 4px 10px; border-radius: 6px; }
+  .cbar { height: 5px; width: 78px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .cbar > i { display: block; height: 100%; width: 90%; background: var(--accent); border-radius: 3px; }
+  .cmeta { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .tinychip { font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 20px; padding: 2px 8px; }
+  .efields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  @media (max-width: 480px) { .efields { grid-template-columns: repeat(2, 1fr); } }
+  .ef { border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; background: var(--bg); }
+  .ef .efl { font-family: var(--mono); font-size: 9px; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+  .ef .efv { font-family: var(--mono); font-size: 12.5px; color: var(--ink); font-variant-numeric: tabular-nums; margin-top: 3px; white-space: nowrap; }
+  .ef .efv.pos { color: var(--good); } .ef .efv.neg { color: var(--flag); }
+  .tieq { font-family: var(--mono); font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; display: flex; flex-wrap: wrap; gap: 5px; align-items: baseline; }
+  .tieq .pos { color: var(--good); } .tieq .neg { color: var(--flag); }
+  .prov { display: flex; flex-direction: column; gap: 8px; }
+  .prov .pr { display: flex; gap: 9px; font-size: 13px; color: var(--ink); align-items: flex-start; line-height: 1.4; }
+  .prov .pr svg { width: 15px; height: 15px; flex: none; margin-top: 2px; }
+  .prov .pr .det { color: var(--good); font-weight: 600; }
+  .prov .pr .bk { color: var(--warn); font-weight: 600; }
+  .prov .pr small { color: var(--muted); }
 </style>
 
 <header class="bar">
@@ -231,6 +277,7 @@
       <a href="#problem">Problem</a>
       <a href="#what">What it does</a>
       <a href="#arch">Architecture</a>
+      <a href="#engine">Engine</a>
       <a href="#explore">Explore</a>
     </nav>
   </div>
@@ -345,9 +392,76 @@
     </div>
   </section>
 
+  <section id="engine">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · D</span> The extraction engine</div>
+      <h2>A real statement in — reconciled transactions out, with its work shown.</h2>
+      <p>The engine is <b>deterministic-first</b>: layout parsing and bank-specific parsers do the work, and every figure is <b>reconciled (tied out) before it counts</b>. The LLM is break-glass only — it fills the few fields the deterministic layers abstain on, never invents a number, and the result says exactly which fields it touched.</p>
+    </div>
+    <div class="engine-grid">
+      <!-- left: the pipeline -->
+      <div class="pipeline">
+        <div class="stage"><div class="node">1</div><div><div class="s-name">Read the document <span class="tagchip">docling</span></div><div class="s-det">Layout-aware parse of the PDF into structured Markdown — tables, columns, and the statement's own transaction register all survive.</div></div></div>
+        <div class="stage"><div class="node">2</div><div><div class="s-name">Tier 1 capture <span class="tagchip">deterministic</span></div><div class="s-det">Anchor/regex extractors pull institution, statement period, account&nbsp;#, and ending balance — each with a calibrated confidence band.</div></div></div>
+        <div class="stage"><div class="node">3</div><div><div class="s-name">Bank specialist <span class="tagchip">deterministic</span></div><div class="s-det">A per-bank profile (e.g. Capital&nbsp;One&nbsp;360) resolves the identity fields from that bank's exact layout — and skips the LLM entirely when it's confident.</div></div></div>
+        <div class="stage"><div class="node">4</div><div><div class="s-name">Register parser <span class="tagchip">deterministic</span></div><div class="s-det">Reads the transaction register line-by-line and derives the deposit / withdrawal totals — accepted <b>only when the register's own opening &amp; closing rows reconcile</b>.</div></div></div>
+        <div class="stage"><div class="node"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg></div><div><div class="s-name">Tie-out validation <span class="tagchip gate">the trust gate</span></div><div class="s-det">beginning&nbsp;+&nbsp;deposits&nbsp;−&nbsp;withdrawals&nbsp;=&nbsp;ending, to the penny. If it doesn't close, the figure is <b>flagged for review</b> — never silently trusted.</div></div></div>
+        <div class="stage llm"><div class="node">↯</div><div><div class="s-name">LLM break-glass <span class="tagchip brk">only if needed</span></div><div class="s-det">For the few fields the deterministic layers abstain on, a hard-capped Haiku call (with a free local model as automatic fallback) fills the gap — and the reveal names those fields explicitly.</div></div></div>
+        <div class="stage"><div class="node">→</div><div><div class="s-name">Transactions + evidence</div><div class="s-det">Reconciled rows become testable transactions, and every capture emits to the append-only audit trail tagged with method, model, and confidence.</div></div></div>
+      </div>
+
+      <!-- right: a real extraction, recreated -->
+      <div class="wp reveal fade" aria-label="Extraction reveal for a real Capital One statement, reconciled and tied out">
+        <div class="wp-head"><span><span class="wp-dot"></span>CAPITAL ONE 360 · CHECKING</span><span class="st">● PROCESSED · 24 TXNS</span></div>
+
+        <div class="rv-sec">
+          <div class="rv-k">Classified</div>
+          <div class="class-row">
+            <span class="pill">Bank statement</span>
+            <span class="cbar"><i></i></span>
+            <span class="cmeta">90% confident</span>
+            <span class="tinychip">via content_signals</span>
+          </div>
+        </div>
+
+        <div class="rv-sec">
+          <div class="rv-k">Extracted</div>
+          <div class="efields">
+            <div class="ef"><div class="efl">Institution</div><div class="efv">Capital One</div></div>
+            <div class="ef"><div class="efl">Period</div><div class="efv">08-11 → 08-31</div></div>
+            <div class="ef"><div class="efl">Account</div><div class="efv">••3982</div></div>
+            <div class="ef"><div class="efl">Beginning</div><div class="efv">$0.00</div></div>
+            <div class="ef"><div class="efl">Deposits (6)</div><div class="efv pos">$544.37</div></div>
+            <div class="ef"><div class="efl">Withdrawals (18)</div><div class="efv neg">$424.26</div></div>
+          </div>
+        </div>
+
+        <div class="rv-sec">
+          <div class="rv-k">Tie-out</div>
+          <div class="tieq"><span>$0.00</span><span class="pos">+&nbsp;$544.37</span><span class="neg">−&nbsp;$424.26</span><span style="color:var(--faint)">=</span><span><b>$120.11</b></span></div>
+          <div class="tied" style="margin:10px -16px -12px">
+            <span class="mark"><svg class="tick on" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></svg> Reconciles to the penny</span>
+            <span class="var">variance&nbsp; <b>0.00</b></span>
+          </div>
+        </div>
+
+        <div class="rv-sec" style="border-bottom:none">
+          <div class="rv-k"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5" stroke-width="1.6"/></svg> How this was extracted</div>
+          <div class="prov">
+            <div class="pr"><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><span class="det">Deterministic</span> · Tier&nbsp;1 capture — institution</span></div>
+            <div class="pr"><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><span class="det">Deterministic</span> · Capital&nbsp;One specialist (capone_360) — account&nbsp;#, period</span></div>
+            <div class="pr"><svg viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><span class="det">Deterministic</span> · Register parser — 24 transactions + totals <small>(tie-out validated)</small></span></div>
+            <div class="pr"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l1.7 5.1L19 9.8l-5.3 1.6L12 16.5l-1.7-5.1L5 9.8l5.3-1.7z"/></svg><span><span class="bk">LLM break-glass</span> · ending balance</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:22px">Every figure in that panel is real output from the deterministic engine on an actual Capital&nbsp;One statement. See it run live on the <b>Financial data</b> page — Audit&nbsp;Readiness → Financial&nbsp;data → <b>“Run a sample through the engine.”</b></div>
+  </section>
+
   <section id="explore">
     <div class="sec-head">
-      <div class="eyebrow"><span class="ref">REF · D</span> Explore both sides</div>
+      <div class="eyebrow"><span class="ref">REF · E</span> Explore both sides</div>
       <h2>Two roles, one shared engagement.</h2>
       <p>The firm authors and sends the request list; the client responds, extracts, and self-assesses. Both roles are backed by a <b>grounded AI assistant</b> and both produce <b>durable, exportable artifacts</b> — the demo is seeded, so you're clicking real engagements and real data.</p>
     </div>

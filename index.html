@@ -386,7 +386,7 @@
       <div>
         <div class="eyebrow fade"><span class="ref">REF · 00</span> Portfolio project · full-stack + applied AI</div>
         <h1 class="fade d1">Audit evidence that arrives <span class="em">already tied&nbsp;out.</span></h1>
-        <p class="lede fade d2">Auditly reads a financial document and <b>checks its own work</b> — every extracted figure is reconciled to its source before it counts. LLM output is <b>never accepted as authoritative without deterministic validation and source provenance</b>: the model fills gaps and flags what's missing, but a number only counts once it ties out, and every value stays traceable to the page it came from.</p>
+        <p class="lede fade d2">Auditly reads a financial document and <b>checks its own work</b>. Every number it pulls gets reconciled against the source before it counts — if it doesn't tie out, it's flagged, not trusted. The AI helps read and fills the gaps, but it <b>never gets the final say on a figure</b>, and every value stays traceable to the page it came from.</p>
         <div class="cta-row fade d3">
           <a class="btn btn-primary" href="#engine">See how it works <span class="arrow">→</span></a>
           <a class="btn btn-ghost" href="https://auditly.147.135.113.6.sslip.io/start" target="_blank" rel="noopener">Try it live <span class="arrow">→</span></a>
@@ -432,11 +432,11 @@
       </div>
       <div class="item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div><div class="mine">Trust gate</div><h3>Reconciliation before acceptance</h3><p>Extracted bank figures are only trusted when the statement's own roll-forward ties out to the penny (beginning + deposits − withdrawals = ending). If it doesn't close, the value is flagged for review — the deterministic invariant is the gate, upstream of any model.</p></div>
+        <div><div class="mine">Trust gate</div><h3>Nothing's trusted until it ties out</h3><p>Extracted bank figures only count when the statement's own roll-forward ties out to the penny (beginning + deposits − withdrawals = ending). If it doesn't close, the number gets flagged for review. The arithmetic is the gate — and it runs before any model does.</p></div>
       </div>
       <div class="item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div><div class="mine">Grounded AI</div><h3>LLM as a validated, non-authoritative layer</h3><p>The copilot only ever sees an allow-listed grounding bundle and defers to the deterministic engine; LLM-extracted values are re-validated (tie-out + provenance) before they count. Backed by a no-leak / no-fabrication safety-eval suite.</p></div>
+        <div><div class="mine">Grounded AI</div><h3>The AI helps read — it never has the final word</h3><p>The copilot only ever sees an allow-listed slice of context and defers to the deterministic engine; anything the LLM pulls out gets re-checked (tie-out + provenance) before it counts. A safety-eval suite watches for leaks and made-up numbers.</p></div>
       </div>
       <div class="item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
@@ -444,7 +444,7 @@
       </div>
       <div class="item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
-        <div><div class="mine">Observability</div><h3>Cost + audit instrumentation</h3><p>Every model call is logged with provider, model, tokens, latency, and USD cost; every capture emits to an append-only audit trail tagged with method, model, and confidence. You can answer "how was this number produced, and what did it cost" for any figure.</p></div>
+        <div><div class="mine">Observability</div><h3>Every number is traceable, and priced</h3><p>Every model call is logged with provider, model, tokens, latency, and USD cost; every capture emits to an append-only audit trail tagged with method, model, and confidence. You can answer "how was this number produced, and what did it cost" for any figure.</p></div>
       </div>
     </div>
     <div class="honest" style="border-left-color:var(--faint)">
@@ -721,8 +721,8 @@
       <p>Full-Stack &amp; Applied&nbsp;AI Engineer. I built every part of Auditly myself — the multi-tenant backend, the extraction engine and its reconciliation gates, the AI layer, and the deployment on a live box. I know exactly why each piece is the way it is, where it's still rough, and what I'd change to run it at real scale — and I'm happy to get into all of it.</p>
     </div>
     <div class="idcard">
-      <h3>Evaluate me as a candidate</h3>
-      <p class="role">Code, an engineering write-up, and the live system — everything you need to assess the work.</p>
+      <h3>See for yourself</h3>
+      <p class="role">The code, a write-up, and the thing actually running — enough to judge the work without taking my word for it.</p>
       <div class="links">
         <a class="btn btn-primary" href="https://github.com/TetuM7" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a10.5 10.5 0 00-3.32 20.47c.53.1.72-.23.72-.5v-1.9c-2.93.64-3.55-1.24-3.55-1.24-.48-1.22-1.17-1.55-1.17-1.55-.96-.65.07-.64.07-.64 1.06.08 1.62 1.09 1.62 1.09.94 1.62 2.47 1.15 3.07.88.1-.68.37-1.15.67-1.41-2.34-.27-4.8-1.17-4.8-5.2 0-1.15.41-2.09 1.09-2.83-.11-.27-.47-1.34.1-2.8 0 0 .89-.28 2.9 1.08a10 10 0 015.28 0c2.01-1.36 2.9-1.08 2.9-1.08.57 1.46.21 2.53.1 2.8.68.74 1.09 1.68 1.09 2.83 0 4.04-2.47 4.93-4.82 5.19.38.33.72.97.72 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0012 1.5z"/></svg> GitHub <span class="arrow">→</span></a>
         <a class="btn btn-ghost" href="mailto:tetum7@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg> Email</a>

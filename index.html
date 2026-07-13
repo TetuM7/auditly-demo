@@ -316,6 +316,31 @@
   .honest p { margin: 0; color: var(--muted); font-size: 13.5px; }
   .honest p + p { margin-top: 6px; }
 
+  /* ---- product walkthrough screenshots ---- */
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 34px; }
+  @media (max-width: 760px) { .shots { grid-template-columns: 1fr; } }
+  .shotcard { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel); transition: border-color .2s ease, transform .2s ease; }
+  .shotcard:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+  .shotcard.wide { grid-column: 1 / -1; }
+  .shotcard img { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--line); background: #f4f6f5; }
+  .shotcard .cap { padding: 12px 15px; display: flex; gap: 10px; align-items: baseline; }
+  .shotcard .cap .n { font-family: var(--mono); font-size: 10.5px; color: var(--accent); letter-spacing: .06em; flex: none; }
+  .shotcard .cap .t { font-size: 13px; color: var(--muted); }
+  .shotcard .cap .t b { color: var(--ink); font-weight: 600; }
+
+  /* ---- measured results ---- */
+  .meas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 30px; }
+  @media (max-width: 760px) { .meas { grid-template-columns: repeat(2, 1fr); } }
+  .stat-tile { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 16px 16px 14px; }
+  .stat-tile .v { font-family: var(--serif); font-size: 28px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .stat-tile .l { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .stat-tile .s { font-family: var(--mono); font-size: 10px; color: var(--faint); margin-top: 6px; letter-spacing: .03em; }
+  .meas-note { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 34px; }
+  @media (max-width: 760px) { .meas-note { grid-template-columns: 1fr; } }
+  .meas-note .b { font-size: 13.5px; color: var(--muted); display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; }
+  .meas-note .b svg { width: 16px; height: 16px; color: var(--accent); margin-top: 2px; }
+  .meas-note .b b { color: var(--ink); font-weight: 600; }
+
   /* ---- contact / identity section ---- */
   .idcard { margin-top: 30px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 28px 26px; }
   .idcard h3 { font-size: 22px; }
@@ -330,7 +355,8 @@
     <nav>
       <a href="#highlights">Engineering</a>
       <a href="#arch">Architecture</a>
-      <a href="#engine">Engine</a>
+      <a href="#results">Results</a>
+      <a href="#walkthrough">Screens</a>
       <a href="#explore">Explore</a>
       <a href="#built">Built&nbsp;by</a>
     </nav>
@@ -593,6 +619,58 @@
       <div class="k">A note on data</div>
       <p>The extraction engine is validated against a corpus of <b>real, publicly-available bank-statement PDFs</b> (public templates and sample statements) — real formats, no private customer information.</p>
       <p>The interactive demo uses <b>entirely synthetic</b> companies, people, and statements (Northstar&nbsp;Biologics, Sterling&nbsp;&amp;&nbsp;Vance&nbsp;CPAs, and a hand-built sample statement). <b>No real, private, or customer financial data is exposed anywhere in the public demo.</b></p>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · MEAS</span> Measured, not asserted</div>
+      <h2>The engine is benchmarked, and the numbers are in the repo.</h2>
+      <p>Extraction quality is validated against a labeled corpus of real, public bank statements with golden expected fields — fresh end-to-end runs, no caching, holdback sets to guard against overfitting. Headline figures from the canonical full-engine baseline:</p>
+    </div>
+    <div class="meas">
+      <div class="stat-tile"><div class="v">160</div><div class="l">statements benchmarked</div><div class="s">fresh · 0-cache · 0 errors</div></div>
+      <div class="stat-tile"><div class="v">100%</div><div class="l">of institution fields resolved deterministically</div><div class="s">0 LLM calls for that field</div></div>
+      <div class="stat-tile"><div class="v">$0.094</div><div class="l">avg cost / document</div><div class="s">p50 $0.046 · p95 $0.33</div></div>
+      <div class="stat-tile"><div class="v">~60</div><div class="l">benchmark runs tracked in-repo</div><div class="s">across the engine's evolution</div></div>
+    </div>
+    <div class="note" style="margin-top:18px">Field-level accuracy (v3.1 corpus, 97 statements): <b style="color:var(--ink)">institution 85.6% · ending balance 84.5% · account&nbsp;# 81.4% · period 76.3%</b>. All-fields-exact tie-out is a deliberately strict metric and the target of ongoing improvement.</div>
+    <div class="meas-note">
+      <div class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Self-checking.</b> Every extracted figure passes the reconciliation tie-out — a wrong number usually fails its own arithmetic, so errors surface instead of hiding.</span></div>
+      <div class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Holdback discipline.</b> Protected/holdback fixtures are tracked run-over-run to catch regressions and overfitting, not just headline accuracy.</span></div>
+      <div class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Cost + latency measured.</b> Per-document cost and latency distributions (p50/p95) are recorded on every run — the deterministic path is what keeps the average cheap.</span></div>
+      <div class="b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg><span><b>Deterministic contribution, quantified.</b> The benchmark records which layer produced each field, so "how much does the LLM actually do?" has a measured answer.</span></div>
+    </div>
+    <div class="note" style="margin-top:16px">Full methodology + result files: see the <a href="https://github.com/TetuM7/auditly-demo/blob/main/EVALUATION.md" target="_blank" rel="noopener"><b>evaluation write-up</b></a>.</div>
+  </section>
+
+  <section id="walkthrough">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · SEE</span> See it running</div>
+      <h2>The seeded engagement, both sides.</h2>
+      <p>Screenshots from the live demo — a connected audit between a client (Northstar&nbsp;Biologics) and a firm (Sterling&nbsp;&amp;&nbsp;Vance&nbsp;CPAs). All data is synthetic.</p>
+    </div>
+    <div class="shots">
+      <div class="shotcard wide">
+        <img src="images/02-client-engagements.png" alt="Client audit workspace: PBC request buckets, request progress, and a live readiness score" loading="lazy">
+        <div class="cap"><span class="n">01</span><span class="t"><b>The client's workspace</b> — real pending PBC requests bucketed (needs attention / to-do / with auditor), request progress, and a live <b>Readiness: Ready 100</b>.</span></div>
+      </div>
+      <div class="shotcard">
+        <img src="images/04-engine-financials.png" alt="Financial data intake: upload, run a sample through the extraction engine, and a processed statement" loading="lazy">
+        <div class="cap"><span class="n">02</span><span class="t"><b>Financial intake + engine</b> — run a real statement through the actual engine; it reconciles and ingests transactions.</span></div>
+      </div>
+      <div class="shotcard">
+        <img src="images/03-client-readiness.png" alt="Audit Readiness page with next-best-actions and a grounded readiness assistant" loading="lazy">
+        <div class="cap"><span class="n">03</span><span class="t"><b>Audit Readiness</b> — a monthly self-assessment, next-best-actions, and a grounded AI assistant.</span></div>
+      </div>
+      <div class="shotcard">
+        <img src="images/05-firm-portal.png" alt="Auditor Portal for the firm showing the same engagement and review queue" loading="lazy">
+        <div class="cap"><span class="n">04</span><span class="t"><b>The firm's Auditor Portal</b> — the same engagement from the auditor's side, with the review queue.</span></div>
+      </div>
+      <div class="shotcard">
+        <img src="images/01-doors.png" alt="One-click demo doors: enter as client, firm, or a fresh account" loading="lazy">
+        <div class="cap"><span class="n">05</span><span class="t"><b>One-click demo doors</b> — drop straight into any persona, no signup.</span></div>
+      </div>
     </div>
   </section>
 

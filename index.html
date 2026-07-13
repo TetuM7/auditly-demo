@@ -3,12 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Auditly — an audit-prep platform. Every figure reconciled to its source before it counts. Verified, not guessed.">
-<meta property="og:title" content="Auditly — audit-prep platform">
-<meta property="og:description" content="Audit evidence that arrives already tied out. Verified, not guessed.">
+<title>Auditly — audit-prep platform · built by Tetu Mbah</title>
+<meta name="author" content="Tetu Mbah">
+<meta name="description" content="Auditly — a production-style audit-prep platform built by Tetu Mbah (full-stack + applied AI). Deterministic-first financial extraction with reconciliation gates; LLM output is never accepted without deterministic validation and source provenance.">
+<link rel="canonical" href="https://tetum7.github.io/auditly-demo/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Auditly — built by Tetu Mbah">
+<meta property="og:description" content="A production-style audit-prep system: deterministic-first extraction with reconciliation gates, grounded AI, DB-enforced multi-tenancy. Designed, built, tested, and deployed by Tetu Mbah.">
+<meta property="og:url" content="https://tetum7.github.io/auditly-demo/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Auditly — built by Tetu Mbah">
+<meta name="twitter:description" content="Deterministic-first financial extraction with reconciliation gates + grounded AI, multi-tenant, containerized and deployed. An engineering portfolio project.">
 </head>
 <body>
-<title>Auditly — audit-prep platform</title>
 <style>
   :root {
     --bg: #f4f6f5;
@@ -268,20 +276,81 @@
   .prov .pr .det { color: var(--good); font-weight: 600; }
   .prov .pr .bk { color: var(--warn); font-weight: 600; }
   .prov .pr small { color: var(--muted); }
+  /* ---- reviewers banner (identity, persistent under the bar) ---- */
+  .revbar { border-bottom: 1px solid var(--line); background: var(--panel); }
+  .revbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; }
+  .revbar .who { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .revbar .who b { font-family: var(--serif); font-size: 16px; }
+  .revbar .who .role { font-size: 13px; color: var(--muted); }
+  .revbar .links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chiplink { font-size: 12.5px; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 6px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; transition: border-color .18s ease, color .18s ease; }
+  .chiplink:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .chiplink svg { width: 13px; height: 13px; }
+
+  /* ---- engineering highlights ---- */
+  .hl { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 34px; margin-top: 30px; }
+  @media (max-width: 760px) { .hl { grid-template-columns: 1fr; } }
+  .hl .item { display: grid; grid-template-columns: 20px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .hl .item > svg { width: 18px; height: 18px; margin-top: 3px; color: var(--accent); flex: none; }
+  .hl .item h3 { font-size: 15.5px; font-family: var(--sans); font-weight: 650; margin-bottom: 3px; }
+  .hl .item p { color: var(--muted); font-size: 13.5px; margin: 0; }
+  .hl .item .mine { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+
+  /* ---- system data-flow diagram ---- */
+  .flow { margin-top: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 24px 22px; overflow-x: auto; }
+  .flow-track { display: flex; flex-direction: column; gap: 0; min-width: 280px; }
+  .fstep { display: grid; grid-template-columns: 156px 1fr; gap: 16px; align-items: center; }
+  @media (max-width: 620px) { .fstep { grid-template-columns: 120px 1fr; gap: 10px; } }
+  .fstep .box { font-family: var(--mono); font-size: 12px; color: var(--ink); border: 1px solid var(--line-strong); border-radius: 7px; padding: 8px 11px; text-align: center; background: var(--bg); }
+  .fstep.gate .box { border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .fstep.llm .box { border-style: dashed; color: var(--warn); border-color: var(--warn); }
+  .fstep .desc { font-size: 12.5px; color: var(--muted); }
+  .fstep .desc b { color: var(--ink); font-weight: 600; }
+  .farrow { height: 15px; padding-left: 76px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+  @media (max-width: 620px) { .farrow { padding-left: 59px; } }
+  .flow-note { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-top: 14px; }
+
+  /* ---- data honesty callout ---- */
+  .honest { margin-top: 26px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--panel); padding: 16px 18px; }
+  .honest .k { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .honest p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .honest p + p { margin-top: 6px; }
+
+  /* ---- contact / identity section ---- */
+  .idcard { margin-top: 30px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 28px 26px; }
+  .idcard h3 { font-size: 22px; }
+  .idcard .role { color: var(--muted); font-size: 15px; margin: 4px 0 0; }
+  .idcard .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .idcard .btn svg { width: 15px; height: 15px; }
 </style>
 
 <header class="bar">
   <div class="wrap">
     <div class="brand"><b>Auditly</b><span class="tag">audit-prep platform</span></div>
     <nav>
-      <a href="#problem">Problem</a>
-      <a href="#what">What it does</a>
+      <a href="#highlights">Engineering</a>
       <a href="#arch">Architecture</a>
       <a href="#engine">Engine</a>
       <a href="#explore">Explore</a>
+      <a href="#built">Built&nbsp;by</a>
     </nav>
   </div>
 </header>
+
+<!-- Persistent identity: who built this + where to evaluate the candidate -->
+<div class="revbar">
+  <div class="wrap">
+    <div class="who">
+      <b>Built by Tetu&nbsp;Mbah</b>
+      <span class="role">Full-Stack &amp; Applied&nbsp;AI Engineer · designed, built, tested &amp; deployed this system</span>
+    </div>
+    <div class="links">
+      <a class="chiplink" href="https://github.com/TetuM7" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a10.5 10.5 0 00-3.32 20.47c.53.1.72-.23.72-.5v-1.9c-2.93.64-3.55-1.24-3.55-1.24-.48-1.22-1.17-1.55-1.17-1.55-.96-.65.07-.64.07-.64 1.06.08 1.62 1.09 1.62 1.09.94 1.62 2.47 1.15 3.07.88.1-.68.37-1.15.67-1.41-2.34-.27-4.8-1.17-4.8-5.2 0-1.15.41-2.09 1.09-2.83-.11-.27-.47-1.34.1-2.8 0 0 .89-.28 2.9 1.08a10 10 0 015.28 0c2.01-1.36 2.9-1.08 2.9-1.08.57 1.46.21 2.53.1 2.8.68.74 1.09 1.68 1.09 2.83 0 4.04-2.47 4.93-4.82 5.19.38.33.72.97.72 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0012 1.5z"/></svg>GitHub</a>
+      <a class="chiplink" href="mailto:tetum7@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>Email</a>
+      <a class="chiplink" href="#built"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M13 6l6 6-6 6"/></svg>For technical reviewers</a>
+    </div>
+  </div>
+</div>
 
 <div class="ledger">
 <div class="wrap">
@@ -291,9 +360,9 @@
       <div>
         <div class="eyebrow fade"><span class="ref">REF · 00</span> Portfolio project · full-stack + applied AI</div>
         <h1 class="fade d1">Audit evidence that arrives <span class="em">already tied&nbsp;out.</span></h1>
-        <p class="lede fade d2">Auditly reads a financial document and <b>checks its own work</b> — every figure reconciled to its source before it counts. <b>Verified, not guessed.</b> The AI reads the evidence and flags what's missing; it never invents a number, and every value stays traceable to the page it came from.</p>
+        <p class="lede fade d2">Auditly reads a financial document and <b>checks its own work</b> — every extracted figure is reconciled to its source before it counts. LLM output is <b>never accepted as authoritative without deterministic validation and source provenance</b>: the model fills gaps and flags what's missing, but a number only counts once it ties out, and every value stays traceable to the page it came from.</p>
         <div class="cta-row fade d3">
-          <a class="btn btn-primary" href="#explore">Watch the demo <span class="arrow">→</span></a>
+          <a class="btn btn-primary" href="#engine">See how it works <span class="arrow">→</span></a>
           <a class="btn btn-ghost" href="https://auditly.147.135.113.6.sslip.io/start" target="_blank" rel="noopener">Try it live <span class="arrow">→</span></a>
         </div>
         <div class="note fade d3">Live demo · <b>alice@acme.com</b> / <b>password123</b> · deterministic extraction runs free, LLM path is Haiku with a hard spend cap.</div>
@@ -317,6 +386,44 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="highlights">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · ENG</span> For technical reviewers</div>
+      <h2>What I personally designed, built, and defended.</h2>
+      <p>Auditly is a solo build. These are the load-bearing engineering decisions — the parts I'd want to walk you through in an interview — not a feature list.</p>
+    </div>
+    <div class="hl">
+      <div class="item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
+        <div><div class="mine">Multi-tenancy</div><h3>DB-enforced tenant isolation</h3><p>Postgres row-level security on every tenant table, scoped through a single query helper. A cross-tenant read returns <b>404, not 403</b> — isolation is a database invariant, not application discipline that can be forgotten in one endpoint.</p></div>
+      </div>
+      <div class="item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
+        <div><div class="mine">Async pipeline</div><h3>Document processing with failure recovery</h3><p>Uploads run through a Redis/BullMQ worker chain (scan → parse → classify → extract → bridge). Every stage is idempotent; an unrecoverable error lands the document in a terminal <b>failed</b> state with a reason instead of silently hanging or double-counting on retry.</p></div>
+      </div>
+      <div class="item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
+        <div><div class="mine">Trust gate</div><h3>Reconciliation before acceptance</h3><p>Extracted bank figures are only trusted when the statement's own roll-forward ties out to the penny (beginning + deposits − withdrawals = ending). If it doesn't close, the value is flagged for review — the deterministic invariant is the gate, upstream of any model.</p></div>
+      </div>
+      <div class="item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
+        <div><div class="mine">Grounded AI</div><h3>LLM as a validated, non-authoritative layer</h3><p>The copilot only ever sees an allow-listed grounding bundle and defers to the deterministic engine; LLM-extracted values are re-validated (tie-out + provenance) before they count. Backed by a no-leak / no-fabrication safety-eval suite.</p></div>
+      </div>
+      <div class="item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
+        <div><div class="mine">Deploy / ops</div><h3>Containerized, deployed, self-healing demo</h3><p>The full stack (API · workers · Postgres · Redis · object storage · authorization · document OCR) runs from one Compose file behind Caddy auto-TLS on a VPS, with per-IP rate limiting, a hard LLM spend cap, and an unattended nightly reset that restores a clean, seeded demo.</p></div>
+      </div>
+      <div class="item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6"/></svg>
+        <div><div class="mine">Observability</div><h3>Cost + audit instrumentation</h3><p>Every model call is logged with provider, model, tokens, latency, and USD cost; every capture emits to an append-only audit trail tagged with method, model, and confidence. You can answer "how was this number produced, and what did it cost" for any figure.</p></div>
+      </div>
+    </div>
+    <div class="honest" style="border-left-color:var(--faint)">
+      <div class="k" style="color:var(--muted)">Honest scope</div>
+      <p><b>Production-style, not production-scale.</b> This is a portfolio system: real architecture, real reconciliation, real deployment — running on a single small VPS with synthetic demo data. It is not carrying live customer traffic or regulated financial data. Where something is simulated (e.g. the free local-LLM fallback, the seeded engagements), the page says so.</p>
     </div>
   </section>
 
@@ -355,15 +462,15 @@
       </div>
       <div class="card">
         <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-2</span></div>
-        <h3>Grounded copilot, no-leak by construction</h3>
-        <p>One reusable spine powers copilots on four surfaces. The model only ever sees an <b>allow-listed grounding bundle</b> and defers to the deterministic engine — it can't invent figures or leak the auditor's internals.</p>
-        <span class="stat">24 / 24 safety-eval pass</span>
+        <h3>Grounded copilot, allow-listed context</h3>
+        <p>One reusable spine powers copilots on four surfaces. The model only ever sees an <b>allow-listed grounding bundle</b> and defers to the deterministic engine — it surfaces figures the engine validated, not ones it made up, and can't reach the auditor's internals. A safety-eval suite checks for leakage and fabrication.</p>
+        <span class="stat">no-leak / no-fabrication evals</span>
       </div>
       <div class="card">
         <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-3</span></div>
-        <h3>Evidence substrate + ports</h3>
-        <p>Every capture — extraction, verification, correction, metric — emits to an append-only log and to corpus + time-series "taps," each tagged with method, model, and consent. The audit trail is the product, not an afterthought.</p>
-        <span class="stat">append-only · tamper-evident</span>
+        <h3>Evidence substrate + signed audit trail</h3>
+        <p>Every capture — extraction, verification, correction, metric — emits to an append-only log tagged with method, model, and consent. Control-test records are <b>Ed25519-signed per tenant</b>, so a modified or forged historical record fails signature verification — genuine tamper-<em>evidence</em>, not just an append-only claim.</p>
+        <span class="stat">append-only · Ed25519-signed records</span>
       </div>
       <div class="card">
         <div class="top"><svg class="tickmark" width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="idx">B-4</span></div>
@@ -376,11 +483,36 @@
 
   <section id="arch">
     <div class="sec-head">
-      <div class="eyebrow"><span class="ref">REF · C</span> Architecture</div>
-      <h2>A layered monorepo: evidence substrate → product surfaces.</h2>
-      <p>Turborepo, typed end-to-end. Deterministic engine and grounded AI sit on a shared substrate that both the auditor and auditee surfaces read through.</p>
+      <div class="eyebrow"><span class="ref">REF · C</span> Architecture &amp; data flow</div>
+      <h2>How a document becomes trusted evidence.</h2>
+      <p>The interesting part isn't the box diagram — it's the <b>trust boundary</b>: an uploaded file crosses through deterministic validation and a reconciliation gate before it's ever written as evidence, and the LLM sits <em>after</em> the gate, not in front of it.</p>
     </div>
-    <div class="arch">
+
+    <div class="flow" aria-label="System data-flow diagram">
+      <div class="flow-track">
+        <div class="fstep"><div class="box">Upload</div><div class="desc">Client drops a statement / GL / trial balance into their workspace.</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep"><div class="box">API + auth</div><div class="desc">Express + JWT; <b>Postgres RLS</b> scopes every read/write to the caller's tenant.</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep"><div class="box">Object storage</div><div class="desc">Raw bytes to S3-compatible storage; a job is enqueued (Redis/BullMQ).</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep"><div class="box">Async worker</div><div class="desc">Scan → layout parse (docling) → classify → <b>deterministic extraction</b>. Idempotent; failures are terminal + recorded.</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep gate"><div class="box">Reconciliation gate</div><div class="desc"><b>The trust boundary.</b> Figures must tie out to the penny or they're flagged for review — never silently trusted.</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep llm"><div class="box">LLM fallback</div><div class="desc">Break-glass only, hard-capped, for fields the deterministic layers abstain on — then re-validated against the gate.</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep"><div class="box">Postgres + evidence log</div><div class="desc">Reconciled transactions + an append-only, method/model-tagged audit trail (control tests Ed25519-signed).</div></div>
+        <div class="farrow">↓</div>
+        <div class="fstep"><div class="box">Auditor · auditee</div><div class="desc">Role-aware workspaces read the same substrate through the tenant boundary.</div></div>
+      </div>
+      <div class="flow-note">Trust boundary = the reconciliation gate. Nothing becomes evidence upstream of it; the model lives downstream of it.</div>
+    </div>
+
+    <div class="sec-head" style="max-width:40em;margin-top:36px;gap:8px">
+      <div class="eyebrow" style="color:var(--faint)">The stack · typed end-to-end (Turborepo)</div>
+    </div>
+    <div class="arch" style="margin-top:14px">
       <div class="layer"><span class="l">Frontend</span><span class="v">Next.js 16 · React 19</span></div>
       <div class="layer"><span class="l">API</span><span class="v">Express · JWT · Postgres RLS</span></div>
       <div class="layer"><span class="l">Async / pipeline</span><span class="v">Workers · Temporal · Redis</span></div>
@@ -456,14 +588,19 @@
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:22px">Every figure in that panel is real output from the deterministic engine on an actual Capital&nbsp;One statement. See it run live on the <b>Financial data</b> page — Audit&nbsp;Readiness → Financial&nbsp;data → <b>“Run a sample through the engine.”</b></div>
+    <div class="note" style="margin-top:22px">Every figure in that panel is real deterministic-engine output, run on a <b>real, publicly-available Capital&nbsp;One statement PDF from the extraction test corpus</b> — a real banking format, not anyone's private account. See it run live on the <b>Financial data</b> page — Audit&nbsp;Readiness → Financial&nbsp;data → <b>“Run a sample through the engine.”</b></div>
+    <div class="honest">
+      <div class="k">A note on data</div>
+      <p>The extraction engine is validated against a corpus of <b>real, publicly-available bank-statement PDFs</b> (public templates and sample statements) — real formats, no private customer information.</p>
+      <p>The interactive demo uses <b>entirely synthetic</b> companies, people, and statements (Northstar&nbsp;Biologics, Sterling&nbsp;&amp;&nbsp;Vance&nbsp;CPAs, and a hand-built sample statement). <b>No real, private, or customer financial data is exposed anywhere in the public demo.</b></p>
+    </div>
   </section>
 
   <section id="explore">
     <div class="sec-head">
       <div class="eyebrow"><span class="ref">REF · E</span> Explore both sides</div>
       <h2>Two roles, one shared engagement.</h2>
-      <p>The firm authors and sends the request list; the client responds, extracts, and self-assesses. Both roles are backed by a <b>grounded AI assistant</b> and both produce <b>durable, exportable artifacts</b> — the demo is seeded, so you're clicking real engagements and real data.</p>
+      <p>The firm authors and sends the request list; the client responds, extracts, and self-assesses. Both roles are backed by a <b>grounded AI assistant</b> and both produce <b>durable, exportable artifacts</b> — the demo is seeded with synthetic companies and statements, so you're clicking a fully-wired engagement end to end.</p>
     </div>
     <div class="doors">
       <div class="door">
@@ -494,8 +631,27 @@
       </div>
     </div>
     <div class="explore-foot">
-      <a class="btn btn-ghost" href="#" aria-label="Demo walkthrough video">Watch the 3-min walkthrough <span class="arrow">→</span></a>
-      <span class="note" style="margin:0">Deterministic extraction runs free · LLM path is Haiku, hard-capped · source available to reviewers on request.</span>
+      <a class="btn btn-ghost" href="#built">Who built this <span class="arrow">→</span></a>
+      <span class="note" style="margin:0">Deterministic extraction runs free · LLM path is Haiku, hard-capped · source + engineering write-up available to reviewers on request.</span>
+    </div>
+  </section>
+
+  <section id="built">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="ref">REF · WHO</span> Built by</div>
+      <h2>Tetu Mbah</h2>
+      <p>Full-Stack &amp; Applied&nbsp;AI Engineer. I designed, built, tested, and deployed all of Auditly — the multi-tenant backend, the deterministic-first extraction engine and its reconciliation gates, the grounded-AI layer and its safety evals, and the containerized deployment. I'm happy to walk through any of it in depth, including the hard parts and what I'd do differently at scale.</p>
+    </div>
+    <div class="idcard">
+      <h3>Evaluate me as a candidate</h3>
+      <p class="role">Code, an engineering write-up, and the live system — everything you need to assess the work.</p>
+      <div class="links">
+        <a class="btn btn-primary" href="https://github.com/TetuM7" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a10.5 10.5 0 00-3.32 20.47c.53.1.72-.23.72-.5v-1.9c-2.93.64-3.55-1.24-3.55-1.24-.48-1.22-1.17-1.55-1.17-1.55-.96-.65.07-.64.07-.64 1.06.08 1.62 1.09 1.62 1.09.94 1.62 2.47 1.15 3.07.88.1-.68.37-1.15.67-1.41-2.34-.27-4.8-1.17-4.8-5.2 0-1.15.41-2.09 1.09-2.83-.11-.27-.47-1.34.1-2.8 0 0 .89-.28 2.9 1.08a10 10 0 015.28 0c2.01-1.36 2.9-1.08 2.9-1.08.57 1.46.21 2.53.1 2.8.68.74 1.09 1.68 1.09 2.83 0 4.04-2.47 4.93-4.82 5.19.38.33.72.97.72 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0012 1.5z"/></svg> GitHub <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="mailto:tetum7@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg> Email</a>
+        <a class="btn btn-ghost" href="https://github.com/TetuM7/auditly-demo#readme" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h11a2 2 0 012 2v12M4 5v13a1 1 0 001 1h12M4 5a1 1 0 011-1h9"/></svg> Engineering case study</a>
+        <!-- TODO(tetu): add LinkedIn + résumé buttons once URLs are provided -->
+      </div>
+      <div class="note" style="margin-top:16px">GitHub: github.com/TetuM7 · Email: tetum7@gmail.com · LinkedIn &amp; résumé: add on request.</div>
     </div>
   </section>
 
@@ -504,8 +660,8 @@
 
 <footer>
   <div class="wrap">
-    <span>Auditly — a portfolio project in audit-prep + applied AI.</span>
-    <span class="mono">deterministic-first · grounded AI · append-only evidence</span>
+    <span><b style="color:var(--muted)">Built by Tetu Mbah</b> — Full-Stack &amp; Applied AI Engineer · <a href="https://github.com/TetuM7" target="_blank" rel="noopener">GitHub</a> · <a href="mailto:tetum7@gmail.com">Email</a></span>
+    <span class="mono">deterministic-first · grounded AI · signed, append-only evidence</span>
   </div>
 </footer>
 
